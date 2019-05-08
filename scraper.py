@@ -30,10 +30,25 @@ while stillPallets:
     elif httpText[0:14] == "<script>arr = " and httpText[-10:] == ";</script>":
         
         paletteData += list(map(lambda a: {
+        
             "id": int(a["id"]),
             "date": a["date"],
             "likes": int(a["likes"]),
-            "colours": list(map(lambda b: {"r": int(b[0:2], 16), "g": int(b[2:4], 16), "b": int(b[4:6], 16)}, wrap(a["code"], 6)))
+            "colours": list(map(lambda b: {
+            
+                "r": int(b[0:2], 16), 
+                "g": int(b[2:4], 16), 
+                "b": int(b[4:6], 16)
+                
+            }, wrap(a["code"], 6))),
+            "scaled": list(map(lambda b: {
+            
+                "r": float(int(b[0:2], 16)) / 255.0, 
+                "g": float(int(b[2:4], 16)) / 255.0, 
+                "b": float(int(b[4:6], 16)) / 255.0
+                
+            }, wrap(a["code"], 6)))
+            
         }, json.loads(httpText[14:-13] + "]")))
         
         scrapeParams["step"] += 1
